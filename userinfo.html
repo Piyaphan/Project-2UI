@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="index.html" class="brand-logo"><i class="material-icons">assignment_ind</i>Membership System</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="signin.html">Sign in</a></li>
+        <li><a href="signup.html">Sign up</a></li>
+      </ul>
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="signin.html">Sign in</a></li>
+        <li><a href="signup.html">Sign up</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+
+<div class="container">
+  <h4 class="center">User Information</h4><br><br>
+  <div class="row">
+    <form class="col s12" method="post">
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="username">Username</label>
+         <p class="form-control-static" id="username" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="password">Password</label>
+          <p class="form-control-static" id="password" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="fname">First name</label>
+            <p class="form-control-static" id="fname" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="lname">Last name</label>
+          <p class="form-control-static" id="lname" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="email">Email</label>
+          <p class="form-control-static" id="email" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="tel">Telephone</label>
+           <p class="form-control-static" id="tel" placeholder=""></p>
+        </div>
+      </div>
+      <div class="row center">
+        <button type="button" id="edit" name="button" class="btn btn-primary">Edit</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script type="text/javascript">
+        //Function for extract parameters from querystring
+        $.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+
+        $(function(){
+            //Get user Id from querystring parameters
+            var id = $.urlParam('id');
+            //Create a Web Api url for getting a member info
+            var url = "http://membershipwebapi977290.azurewebsites.net/api/Members/"+ id;
+            console.log(url);
+            $.get(url, function(data, status) {
+                console.log(data);
+                $('#username').html(data.UserName);
+                $('#password').html(data.Password);
+                $('#fname').html(data.FirstName);
+                $('#lname').html(data.LastName);
+                $('#email').html(data.Email);
+                $('#tel').html(data.Tel);
+
+                //If user click edit, go to edituser page
+                $("#edit").click(function () {
+                    window.location.href = "edituser.html?id=" + data.Id;
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

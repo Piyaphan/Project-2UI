@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="index.html" class="brand-logo"><i class="material-icons">assignment_ind</i>Membership System</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="signin.html">Sign in</a></li>
+        <li><a href="signup.html">Sign up</a></li>
+      </ul>
+      <ul id="nav-mobile" class="side-nav">
+        <li><a href="signin.html">Sign in</a></li>
+        <li><a href="signup.html">Sign up</a></li>
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+
+<div class="container">
+  <h4 class="center">Edit User</h4><br><br>
+  <div class="row">
+    <form class="col s12" method="post">
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username">
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="password">Password</label>
+        <input type="password" class="form-control" id="password">
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="fname">First name</label>
+            <input type="text" class="form-control" id="fname">
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="lname">Last name</label>
+          <input type="text" class="form-control" id="lname">
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="email">Email</label>
+        <input type="text" class="form-control" id="email">
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <label for="tel">Telephone</label>
+          <input type="text" class="form-control" id="tel">
+        </div>
+      </div>
+      <div class="row center">
+        <button type="button" id="save" name="button" class="btn btn-primary">Save</button>
+        <button type="button" id="cancel" name="button" class="btn btn-default">Cancel</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script type="text/javascript">
+          //Function for extract parameters from querystring
+          $.urlParam = function(name){
+              var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+              return results[1] || 0;
+          }
+
+          $(function(){
+              //Get user Id from querystring parameters
+              var id = $.urlParam('id');
+              //Create a Web Api url for getting a member info
+              var url = "http://membershipwebapi977290.azurewebsites.net/api/Members/" + id;
+              console.log(url);
+              $.get(url, function(data, status) {
+                  console.log(data);
+                  //Set data to form elements
+                  $('#username').val(data.UserName);
+                  $('#password').val(data.Password);
+                  $('#fname').val(data.FirstName);
+                  $('#lname').val(data.LastName);
+                  $('#email').val(data.Email);
+                  $('#tel').val(data.Tel);
+
+                  //If user click cancel, go to userinfo page
+                  $("#cancel").click(function () {
+                      window.location.href = "userinfo.html?id=" + data.Id;
+                  });
+
+                  //Save updated data
+                  $("#save").click(function () {
+                      //Set update data to newuser object
+                      var newuser = { };
+                      newuser.Id = data.Id;
+                      newuser.username = $("#username").val();
+                      newuser.password = $("#password").val();
+                      newuser.firstname = $("#fname").val();
+                      newuser.lastname = $("#lname").val();
+                      newuser.email = $("#email").val();
+                      newuser.tel = $("#tel").val();
+                      console.log(JSON.stringify(newuser));
+
+                      //Creat a url for update member data
+                      var updateUrl = "http://membershipwebapi977290.azurewebsites.net/api/Members/" + data.Id;
+                      //Call Web Api with method PUT for updating
+                      $.ajax({
+                          url: updateUrl,
+                          type: 'PUT',
+                          data: newuser,
+                          success: function(result) {
+                              console.log('Updated!');
+                          }
+                      });
+                  });
+                  });
+              });
+      </script>
+  </body>
+</html>
